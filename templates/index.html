@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🕌 Islamic Learning Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .tab-navigation {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 20px;
+            background: transparent;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #6c757d;
+        }
+
+        .tab-btn.active {
+            background: white;
+            color: #2c3e50;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .tab-btn:hover {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .main-content {
+            padding: 40px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .input-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid #e9ecef;
+        }
+
+        .input-section h2 {
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-size: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .generate-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .generate-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .results-section {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid #e9ecef;
+            min-height: 400px;
+        }
+
+        .results-section h2 {
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-size: 1.5rem;
+        }
+
+        .plan-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .plan-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .recommendations {
+            background: #e8f5e8;
+            border: 2px solid #28a745;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .recommendations h4 {
+            color: #155724;
+            margin-bottom: 15px;
+        }
+
+        .recommendations ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .recommendations li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(40, 167, 69, 0.2);
+            color: #155724;
+        }
+
+        .recommendations li:last-child {
+            border-bottom: none;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+
+        .loading .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #f5c6cb;
+            margin-bottom: 20px;
+        }
+
+        .chat-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            height: 600px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            border-radius: 15px 15px 0 0;
+            margin-bottom: 0;
+        }
+
+        .chat-header h2 {
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+        }
+
+        .chat-header p {
+            opacity: 0.9;
+            margin: 0;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f8f9fa;
+            border-left: 2px solid #dee2e6;
+            border-right: 2px solid #dee2e6;
+            max-height: 400px;
+        }
+
+        .bot-message .message-avatar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            margin-right: 12px;
+        }
+
+        .user-message .message-avatar {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            margin-left: 12px;
+        }
+
+        .message-content {
+            max-width: 70%;
+            padding: 15px 20px;
+            border-radius: 18px;
+            line-height: 1.5;
+        }
+
+        .bot-message .message-content {
+            background: white;
+            border: 1px solid #dee2e6;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .user-message .message-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .message-content ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        .message-content ul li {
+            margin-bottom: 5px;
+        }
+
+        .chat-input-section {
+            background: white;
+            padding: 20px;
+            border: 2px solid #dee2e6;
+            border-radius: 0 0 15px 15px;
+            border-top: none;
+        }
+
+        .chat-input-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .chat-input-container input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #dee2e6;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .chat-input-container input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .chat-input-container button {
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.2s ease;
+        }
+
+        .chat-input-container button:hover {
+            transform: translateY(-2px);
+        }
+
+        .chat-input-container button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .quick-questions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .quick-questions span {
+            font-weight: 600;
+            color: #6c757d;
+            margin-right: 10px;
+        }
+
+        .quick-btn {
+            padding: 8px 15px;
+            background: #e9ecef;
+            border: 1px solid #ced4da;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .quick-btn:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .loading-dots {
+            display: inline-flex;
+            gap: 4px;
+            margin-left: 8px;
+        }
+
+        .loading-dots span {
+            width: 6px;
+            height: 6px;
+            background: #667eea;
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+
+        .loading-dots span:nth-child(1) { animation-delay: -0.32s; }
+        .loading-dots span:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .stat-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tab-btn {
+                padding: 15px 10px;
+                font-size: 0.9rem;
+            }
+
+            .chat-container {
+                padding: 10px;
+                height: 500px;
+            }
+
+            .message-content {
+                max-width: 85%;
+            }
+
+            .quick-questions {
+                justify-content: center;
+            }
+
+            .quick-questions span {
+                width: 100%;
+                text-align: center;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🕌 Islamic Learning Hub</h1>
+            <p>AI-Powered Hifz Planning & Islamic Knowledge Assistant</p>
+        </div>
+        
+        <!-- Tab Navigation -->
+        <div class="tab-navigation">
+            <button class="tab-btn active" onclick="openTab(event, 'hifz-planner')">📖 Hifz Planner</button>
+            <button class="tab-btn" onclick="openTab(event, 'islamic-chatbot')">🤖 Islamic Q&A</button>
+        </div>
+        
+        <!-- Hifz Planner Tab -->
+        <div id="hifz-planner" class="tab-content active">
+            <div class="main-content">
+                <div class="input-section">
+                    <h2>📝 Your Hifz Journey</h2>
+                    <form id="hifzForm">
+                        <div class="form-group">
+                            <label for="juz_completed">🎯 How many Juz have you already memorized?</label>
+                            <input type="number" id="juz_completed" name="juz_completed" min="0" max="30" value="0" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="juz_to_memorize">📖 How many more Juz do you want to memorize?</label>
+                            <input type="number" id="juz_to_memorize" name="juz_to_memorize" min="1" max="30" value="1" required>
+                        </div>
+                        
+                        <button type="submit" class="generate-btn" id="generateBtn">
+                            🤖 Generate My Hifz Plan
+                        </button>
+                    </form>
+                </div>
+                
+                <div class="results-section">
+                    <h2>📊 Your Personalized Plan</h2>
+                    <div id="results">
+                        <div style="text-align: center; padding: 60px 20px; color: #6c757d;">
+                            <div style="font-size: 3rem; margin-bottom: 20px;">🎯</div>
+                            <p>Fill in your details and click "Generate My Hifz Plan" to get your personalized schedule!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Islamic Chatbot Tab -->
+        <div id="islamic-chatbot" class="tab-content">
+            <div class="chat-container">
+                <div class="chat-header">
+                    <h2>🤖 Islamic Knowledge Assistant</h2>
+                    <p>Ask me about Islamic teachings, Quran, Hadith, prayers, and more!</p>
+                </div>
+                
+                <div class="chat-messages" id="chatMessages">
+                    <div class="bot-message">
+                        <div class="message-avatar">🤖</div>
+                        <div class="message-content">
+                            <p>Assalamu Alaikum! I'm your Islamic Knowledge Assistant. I can help you with:</p>
+                            <ul>
+                                <li>🕌 Islamic teachings and principles</li>
+                                <li>📖 Quran verses and interpretations</li>
+                                <li>📚 Hadith references and explanations</li>
+                                <li>🕐 Prayer times and methods</li>
+                                <li>🌙 Islamic calendar and events</li>
+                                <li>🤲 Duas and supplications</li>
+                            </ul>
+                            <p>What would you like to learn about today?</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chat-input-section">
+                    <div class="chat-input-container">
+                        <input type="text" id="chatInput" placeholder="Ask your Islamic question here..." maxlength="500">
+                        <button id="sendBtn" onclick="sendMessage()">📤 Send</button>
+                    </div>
+                    <div class="quick-questions">
+                        <span>Quick questions:</span>
+                        <button class="quick-btn" onclick="askQuickQuestion('What are the 5 pillars of Islam?')">5 Pillars</button>
+                        <button class="quick-btn" onclick="askQuickQuestion('How do I perform Wudu?')">Wudu Steps</button>
+                        <button class="quick-btn" onclick="askQuickQuestion('What is the meaning of Surah Al-Fatiha?')">Al-Fatiha</button>
+                        <button class="quick-btn" onclick="askQuickQuestion('Show me a dua for forgiveness')">Forgiveness Dua</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching function
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            
+            // Hide all tab content
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+            
+            // Remove active class from all tab buttons
+            tablinks = document.getElementsByClassName("tab-btn");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+            
+            // Show the selected tab and mark button as active
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+
+        // Hifz Planner Functions
+        document.getElementById('hifzForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const generateBtn = document.getElementById('generateBtn');
+            const resultsDiv = document.getElementById('results');
+            
+            // Get form data
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData.entries());
+            
+            // Show loading state
+            generateBtn.disabled = true;
+            generateBtn.innerHTML = '⏳ Generating Plan...';
+            resultsDiv.innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>AI is analyzing your Hifz journey and creating a personalized plan...</p>
+                </div>
+            `;
+            
+            try {
+                const response = await fetch('/generate_plan', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(result.error || 'An error occurred');
+                }
+                
+                displayResults(result);
+                
+            } catch (error) {
+                resultsDiv.innerHTML = `
+                    <div class="error">
+                        <strong>❌ Error:</strong> ${error.message}
+                    </div>
+                `;
+            } finally {
+                generateBtn.disabled = false;
+                generateBtn.innerHTML = '🤖 Generate My Hifz Plan';
+            }
+        });
+        
+        function displayResults(plan) {
+            const resultsDiv = document.getElementById('results');
+            
+            const revisionText = plan.daily_plan.revision_chunk_size === 0.5 ? "½ Juz" : 
+                                plan.daily_plan.revision_chunk_size === 1 ? "1 Juz" : 
+                                `${plan.daily_plan.revision_chunk_size} Juz`;
+            
+            resultsDiv.innerHTML = `
+                <div class="plan-card">
+                    <h3>📋 Your Personalized Hifz Plan</h3>
+                    <div class="stat-grid">
+                        <div class="stat-item">
+                            <div class="stat-value">${plan.daily_plan.new_lines}</div>
+                            <div class="stat-label">📖 Lines/Day (New)</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">${plan.daily_plan.new_time_hours}h</div>
+                            <div class="stat-label">🕒 New Memorization Time</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">${plan.daily_plan.revision_time_hours}h</div>
+                            <div class="stat-label">🔄 Revision Time</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">${plan.daily_plan.total_time_hours}h</div>
+                            <div class="stat-label">⏱️ Total Daily Time</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="background: #e8f5e8; border: 2px solid #28a745; border-radius: 10px; padding: 20px; margin-bottom: 20px;">
+                    <h4 style="color: #155724; margin-bottom: 15px;">📊 Plan Details</h4>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="padding: 8px 0; color: #155724; border-bottom: 1px solid rgba(40, 167, 69, 0.2);"><strong>📝 Daily New:</strong> ${plan.daily_plan.new_lines} lines (${plan.daily_plan.new_pages} pages)</li>
+                        <li style="padding: 8px 0; color: #155724; border-bottom: 1px solid rgba(40, 167, 69, 0.2);"><strong>🎯 Experience Level:</strong> ${plan.experience_level.replace(/_/g, ' ').replace(/juz/g, 'Juz')}</li>
+                        <li style="padding: 8px 0; color: #155724; border-bottom: 1px solid rgba(40, 167, 69, 0.2);"><strong>🔄 Daily Revision:</strong> ${plan.daily_plan.revision_chunk_size > 0 ? revisionText + ' (7-day cycle)' : 'None needed yet'}</li>
+                        <li style="padding: 8px 0; color: #155724; border-bottom: 1px solid rgba(40, 167, 69, 0.2);"><strong>📅 Completion Time:</strong> ${plan.completion.total_days} days</li>
+                        <li style="padding: 8px 0; color: #155724;"><strong>📚 Total Pages:</strong> ${plan.completion.total_pages} pages to memorize</li>
+                    </ul>
+                </div>
+                
+                <div class="recommendations">
+                    <h4>🎯 Personalized Recommendations</h4>
+                    <ul>
+                        ${plan.recommendations.map(rec => `<li>${rec}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+        }
+
+        // Auto-update validation
+        document.getElementById('juz_completed').addEventListener('input', function() {
+            const completed = parseInt(this.value) || 0;
+            const toMemorizeInput = document.getElementById('juz_to_memorize');
+            const currentToMemorize = parseInt(toMemorizeInput.value) || 0;
+            
+            // Ensure total doesn't exceed 30
+            if (completed + currentToMemorize > 30) {
+                toMemorizeInput.value = Math.max(1, 30 - completed);
+            }
+            toMemorizeInput.max = 30 - completed;
+        });
+        
+        document.getElementById('juz_to_memorize').addEventListener('input', function() {
+            const completed = parseInt(document.getElementById('juz_completed').value) || 0;
+            const toMemorize = parseInt(this.value) || 0;
+            
+            // Ensure total doesn't exceed 30
+            if (completed + toMemorize > 30) {
+                this.value = 30 - completed;
+            }
+        });
+
+        // Islamic Chatbot Functions
+        async function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const question = input.value.trim();
+            
+            if (!question) return;
+            
+            // Add user message
+            addMessage('user', question);
+            input.value = '';
+            
+            // Show loading
+            const loadingId = addMessage('bot', 'Thinking<div class="loading-dots"><span></span><span></span><span></span></div>');
+            
+            try {
+                const response = await fetch('/islamic_chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ question: question })
+                });
+                
+                const result = await response.json();
+                
+                // Remove loading message
+                document.getElementById(loadingId).remove();
+                
+                if (response.ok) {
+                    addMessage('bot', result.answer);
+                } else {
+                    addMessage('bot', '❌ Sorry, I encountered an error. Please try again.');
+                }
+                
+            } catch (error) {
+                document.getElementById(loadingId).remove();
+                addMessage('bot', '❌ Network error. Please check your connection and try again.');
+            }
+        }
+
+        function addMessage(sender, content) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            const messageId = 'msg-' + Date.now();
+            messageDiv.id = messageId;
+            
+            if (sender === 'user') {
+                messageDiv.className = 'user-message';
+                messageDiv.innerHTML = `
+                    <div class="message-content">${content}</div>
+                    <div class="message-avatar">👤</div>
+                `;
+            } else {
+                messageDiv.className = 'bot-message';
+                messageDiv.innerHTML = `
+                    <div class="message-avatar">🤖</div>
+                    <div class="message-content">${content}</div>
+                `;
+            }
+            
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            
+            return messageId;
+        }
+
+        function askQuickQuestion(question) {
+            document.getElementById('chatInput').value = question;
+            sendMessage();
+        }
+
+        // Enter key support for chat
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('chatInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+        });
+    </script>
+</body>
+</html>-message, .user-message {
+            display: flex;
+            margin-bottom: 20px;
+            animation: slideIn 0.3s ease;
+        }
+
+        .user-message {
+            justify-content: flex-end;
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .bot
