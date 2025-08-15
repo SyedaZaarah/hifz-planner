@@ -2,6 +2,14 @@ from flask import Flask, render_template, request, jsonify
 import math
 import json
 from datetime import datetime, timedelta
+import gradio as gr
+
+def greet(name):
+    return f"Hello {name}!"
+
+iface = gr.Interface(fn=greet, inputs="text", outputs="text")
+iface.launch()
+
 
 app = Flask(__name__)
 
